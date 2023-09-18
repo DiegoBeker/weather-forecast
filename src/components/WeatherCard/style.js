@@ -3,11 +3,11 @@ import { styled } from "styled-components";
 export const CardContainer = styled.div`
 display: flex;
 justify-content: space-between;
-background-color: blueviolet;
+background-color: ${({ status }) => status.color};
 border-radius: 10px;
 margin: 50px 0;
 padding: 10px;
-width: 100%;
+width: 500px;
 `;
 
 export const LeftContainer = styled.div`

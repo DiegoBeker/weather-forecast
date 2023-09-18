@@ -1,12 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HeaderContainer, PageContainer } from "./style";
+import { API, API_KEY} from "../../utils/constants"
 import WeatherCard from "../../components/WeatherCard/WeatherCard";
+import axios from "axios";
 
 export default function HomePage() {
   const [city, setCity] = useState("");
-
+  const [weather, setWeather] = useState(undefined);
+  
   function handleChange(event) {
     setCity(event.target.value);
+  }
+
+  useEffect(() =>{
+    const default_city = 'São Paulo'
+
+    axios.get(`${API}/weather?q=${default_city}&appid=${API_KEY}&lang=pt_br`)
+      .then((response) => {
+        console.log(response.data);
+        setWeather(response.data);
+      })
+      .catch((err) => console.log(err))
+  }, []);
+
+  function getWeather(city) {
+
+    axios.get(`${API}/weather?q=${city}&appid=${API_KEY}&lang=pt_br`)
+      .then((response) => {
+        //console.log(response.data);
+        setWeather(response.data);
+      })
+      .catch(() => alert('Algo deu errado. Verifique se o nome está correto.'))
   }
 
   return (
@@ -21,10 +45,14 @@ export default function HomePage() {
             value={city}
             onChange={handleChange}
           />
-          <button onClick={() => alert(city)}>Buscar</button>
+          <button onClick={() => getWeather(city)}>Buscar</button>
         </div>
       </HeaderContainer>
-      <WeatherCard />
+      {
+      weather ?
+      <WeatherCard weatherData={weather}/> :
+      <p>Carregando</p>
+      }
     </PageContainer>
   );
 

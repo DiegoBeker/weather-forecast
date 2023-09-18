@@ -1,19 +1,38 @@
 import { CardContainer, CityName, LeftContainer, RightContainer, Temperature } from "./style";
+import PropTypes from "prop-types";
+import { kelvinToCelsius, capitalizeString } from "../../utils/helpers";
+import status from "../../utils/status";
 
-export default function WeatherCard() {
+function WeatherCard({ weatherData }) {
+
+    const {main, name, weather} = weatherData;
+    const mainWeather = weather[0].main;
+    const weatherStatus = status[mainWeather]
+    // console.log(weatherData);
+    // console.log(weatherStatus);
+
     return(
-        <CardContainer>
+        <CardContainer status={weatherStatus}>
             <LeftContainer>
-              <CityName>Agora: Belo Horizonte</CityName>
+              <CityName>Agora: {name}</CityName>
               <div>
-                <span>Mínima: 15.9°C</span>
-                <span>Máxima: 20.9°C</span>
+                <span>Mínima: {kelvinToCelsius(main.temp_min)}°C</span>
+                <span>Máxima: {kelvinToCelsius(main.temp_max)}°C</span>
               </div>
             </LeftContainer>
             <RightContainer>
-            <span>Nublado</span>
-            <Temperature>18.2°C</Temperature>
+            <span>{capitalizeString(weatherStatus.description)}</span>
+            <Temperature>{kelvinToCelsius(main.temp)}°C</Temperature>
             </RightContainer>
         </CardContainer>
     )
 }
+
+WeatherCard.propTypes = {
+    weatherData: PropTypes.object,
+    name: PropTypes.string,
+    main: PropTypes.object,
+    weather: PropTypes.array,
+}
+
+export default WeatherCard;
