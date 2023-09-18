@@ -3,34 +3,49 @@ import { HeaderContainer, PageContainer } from "./style";
 import { API, API_KEY} from "../../utils/constants"
 import WeatherCard from "../../components/WeatherCard/WeatherCard";
 import axios from "axios";
+import { kelvinToCelsius } from "../../utils/helpers";
+import dayjs from "dayjs";
+import ForecastChart from "../../components/ForecastChart/ForecastChart";
 
 export default function HomePage() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(undefined);
+  const [forecast, setForecast] = useState(undefined);
+  const default_city = 'São Paulo'
   
   function handleChange(event) {
     setCity(event.target.value);
   }
 
   useEffect(() =>{
-    const default_city = 'São Paulo'
-
-    axios.get(`${API}/weather?q=${default_city}&appid=${API_KEY}&lang=pt_br`)
-      .then((response) => {
-        console.log(response.data);
-        setWeather(response.data);
-      })
-      .catch((err) => console.log(err))
+    getWeather(default_city);
+    getForecast(default_city);
   }, []);
 
   function getWeather(city) {
 
     axios.get(`${API}/weather?q=${city}&appid=${API_KEY}&lang=pt_br`)
       .then((response) => {
-        //console.log(response.data);
         setWeather(response.data);
       })
       .catch(() => alert('Algo deu errado. Verifique se o nome está correto.'))
+  }
+
+  function getForecast(city){
+    axios.get(`${API}/forecast?q=${city}&appid=${API_KEY}&lang=pt_br`)
+      .then((response) => {
+        const chartData = response.data.list.map((elem) => {
+          const date = dayjs(elem.dt_txt).format("DD/MM(ddd)")
+          return { date, temp: kelvinToCelsius(elem.main.temp)}
+        })
+        setForecast(chartData);
+      })
+      .catch((err) => console.log(err))
+  }
+
+  function updateInfo(city){
+    getWeather(city);
+    getForecast(city);
   }
 
   return (
@@ -45,12 +60,17 @@ export default function HomePage() {
             value={city}
             onChange={handleChange}
           />
-          <button onClick={() => getWeather(city)}>Buscar</button>
+          <button onClick={() => updateInfo(city)}>Buscar</button>
         </div>
       </HeaderContainer>
       {
       weather ?
       <WeatherCard weatherData={weather}/> :
+      <p>Carregando</p>
+      }
+      {
+      forecast ?
+      <ForecastChart data={forecast}/> :
       <p>Carregando</p>
       }
     </PageContainer>

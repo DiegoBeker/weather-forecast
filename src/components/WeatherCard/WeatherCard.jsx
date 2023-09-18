@@ -7,9 +7,7 @@ function WeatherCard({ weatherData }) {
 
     const {main, name, weather} = weatherData;
     const mainWeather = weather[0].main;
-    const weatherStatus = status[mainWeather]
-    // console.log(weatherData);
-    // console.log(weatherStatus);
+    const weatherStatus = status[mainWeather];
 
     return(
         <CardContainer status={weatherStatus}>
