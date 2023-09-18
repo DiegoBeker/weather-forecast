@@ -4,7 +4,7 @@ const status = {
   "Rain": { description: "Chovendo", color: "#5085A5" },
   "Snow": { description: "Nevando", color: "#eeeeee" },
   "Thunderstorm": { description: "Tempestade", color: "#9A5AF2" },
-  "Drizzle": { description: "Tempestade", color: "#62B0F2" },
+  "Drizzle": { description: "Chuviscando", color: "#62B0F2" },
   "Mist": {description: "Neblina", color: "#eeeeee"}
 }
 
