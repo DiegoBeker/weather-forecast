@@ -15,3 +15,18 @@ Run the following commands
  npm install
  npm run preview
 ```
+
+## Build docker image
+
+```
+docker build -t myusername/myimage:tag .
+```
+
+## Run docker image
+
+```
+docker run -d --name my-container -p 8080:80 myusername/myimage:tag
+```
+
+Check it out on localhost/8080
+
