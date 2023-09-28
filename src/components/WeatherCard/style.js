@@ -7,7 +7,7 @@ background-color: ${({ status }) => status.color};
 border-radius: 10px;
 margin: 50px 0;
 padding: 10px;
-width: 500px;
+max-width: 500px;
 `;
 
 export const LeftContainer = styled.div`

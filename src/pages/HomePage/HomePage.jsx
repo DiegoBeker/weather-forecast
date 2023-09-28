@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { HeaderContainer, PageContainer } from "./style";
-import { API, API_KEY} from "../../utils/constants"
+import { HeaderContainer, InfoContainer, PageContainer } from "./style";
+import { API, API_KEY } from "../../utils/constants"
 import WeatherCard from "../../components/WeatherCard/WeatherCard";
 import axios from "axios";
 import { kelvinToCelsius } from "../../utils/helpers";
@@ -12,12 +12,12 @@ export default function HomePage() {
   const [weather, setWeather] = useState(undefined);
   const [forecast, setForecast] = useState(undefined);
   const default_city = 'São Paulo'
-  
+
   function handleChange(event) {
     setCity(event.target.value);
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     getWeather(default_city);
     getForecast(default_city);
   }, []);
@@ -31,19 +31,19 @@ export default function HomePage() {
       .catch(() => alert('Algo deu errado. Verifique se o nome está correto.'))
   }
 
-  function getForecast(city){
+  function getForecast(city) {
     axios.get(`${API}/forecast?q=${city}&appid=${API_KEY}&lang=pt_br`)
       .then((response) => {
         const chartData = response.data.list.map((elem) => {
           const date = dayjs(elem.dt_txt).format("DD/MM(ddd)")
-          return { date, temp: kelvinToCelsius(elem.main.temp)}
+          return { date, temp: kelvinToCelsius(elem.main.temp) }
         })
         setForecast(chartData);
       })
       .catch((err) => console.log(err))
   }
 
-  function updateInfo(city){
+  function updateInfo(city) {
     getWeather(city);
     getForecast(city);
   }
@@ -64,14 +64,12 @@ export default function HomePage() {
         </div>
       </HeaderContainer>
       {
-      weather ?
-      <WeatherCard weatherData={weather}/> :
-      <p>Carregando</p>
-      }
-      {
-      forecast ?
-      <ForecastChart data={forecast}/> :
-      <p>Carregando</p>
+        weather && forecast ?
+          <InfoContainer>
+            <WeatherCard weatherData={weather} />
+            <ForecastChart data={forecast} />
+          </InfoContainer> :
+          <p>Carregando...</p>
       }
     </PageContainer>
   );
